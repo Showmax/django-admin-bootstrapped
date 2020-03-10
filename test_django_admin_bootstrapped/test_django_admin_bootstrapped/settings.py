@@ -45,7 +45,7 @@ INSTALLED_APPS = (
     'CapitalApp',
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -55,10 +55,23 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.i18n',
-)
+# backwards compatibility (TODO: Do we need it?)
+MIDDLEWARE_CLASSES = MIDDLEWARE
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'django.core.context_processors.i18n',
+            ],
+        },
+    },
+]
 
 ROOT_URLCONF = 'test_django_admin_bootstrapped.urls'
 

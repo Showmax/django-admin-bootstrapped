@@ -1,3 +1,4 @@
+from django.core.validators import validate_comma_separated_integer_list
 from django.db import models
 
 
@@ -19,7 +20,11 @@ class TestMe(models.Model):
     test_bigint = models.BigIntegerField(help_text="Lorem dolor")
     test_positive_integer = models.PositiveIntegerField(help_text="Lorem dolor")
     test_decimal = models.DecimalField(max_digits=5, decimal_places=2, help_text="Lorem dolor")
-    test_comma_separated_int = models.CommaSeparatedIntegerField(max_length=100, help_text="Lorem dolor")
+    test_comma_separated_int = models.CharField(
+        max_length=100,
+        help_text="Lorem dolor",
+        validators=[validate_comma_separated_integer_list]
+    )
     test_small_int = models.SmallIntegerField(help_text="Lorem dolor")
     test_nullbool = models.NullBooleanField(help_text="Lorem dolor")
     test_filepath = models.FilePathField(blank=True, help_text="Lorem dolor")
@@ -41,13 +46,14 @@ class TestMeProxyForFieldsets(TestMe):
 
 
 class TestThat(models.Model):
-    that = models.ForeignKey(TestMe, help_text="Lorem dolor")
+    that = models.ForeignKey(TestMe, help_text="Lorem dolor", on_delete=models.CASCADE)
     test_ip = models.GenericIPAddressField(help_text="Lorem dolor")
     test_url = models.URLField(help_text="Lorem dolor")
     test_int = models.IntegerField(help_text="Lorem dolor")
     test_date = models.DateField(help_text="Lorem dolor")
     test_bool = models.BooleanField(help_text="Lorem dolor", default=True)
-    test_fk = models.ForeignKey('TestSortable', help_text="Lorem dolor", null=True, blank=True)
+    test_fk = models.ForeignKey('TestSortable', help_text="Lorem dolor", null=True,
+                                blank=True, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = u'Test that'
@@ -55,7 +61,7 @@ class TestThat(models.Model):
 
 
 class TestSortable(models.Model):
-    that = models.ForeignKey(TestMe)
+    that = models.ForeignKey(TestMe, on_delete=models.CASCADE)
     position = models.PositiveSmallIntegerField("Position")
     test_char = models.CharField(max_length=5)
 
